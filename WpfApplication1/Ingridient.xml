@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Ingridients>
+  <Ingridient ID="1" Name="Водка" Percent="40" />
+  <Ingridient ID="2" Name="Ром" Percent="40" />
+  <Ingridient ID="3" Name="Джин" Percent="40" />
+  <Ingridient ID="4" Name="Томатный сок" Percent="" />
+  <Ingridient ID="5" Name="Виски" Percent="40" />
+</Ingridients>
