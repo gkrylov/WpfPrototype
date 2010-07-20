@@ -10,10 +10,10 @@
         <XmlDataProvider Source="C:\Users\user\Documents\MyBar.xml"
                          XPath="/Ingridients/Ingridient"
                          x:Key="barIngridientsSource" />
+        <app:Bar Ingridients="{Binding Source={StaticResource ingridientsSource}}" 
+                 x:Key="barSource"/>
         <CollectionViewSource Source="{Binding Source={StaticResource ingridientsSource}}"
                               x:Key="ingridientsSource2"/>
-        <app:Bar Ingridients="{Binding Source={StaticResource ingridientsSource}, UpdateSourceTrigger=PropertyChanged}" 
-                 x:Key="barSource"/>
     </Window.Resources>
     <TabControl>
         <TabItem Header="Ингридиенты" x:Name="ingridientsTabItem">

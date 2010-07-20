@@ -55,6 +55,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="CollectionViewProxy.cs" />
+    <Compile Include="UncommonField.cs" />
+    <Compile Include="ViewRecord.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -64,6 +67,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Bar.cs" />
+    <Compile Include="Class1.cs" />
     <Compile Include="Dictionary.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

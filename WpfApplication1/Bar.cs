@@ -14,12 +14,28 @@ namespace WpfApplication1
     {
         public Bar()
         {
-           // CollectionViewSource
+            //CollectionViewSource
         }
 
-        private static void OnIngredientsChanged(DependencyObject bar, DependencyPropertyChangedEventArgs args)
+        private static void OnIngredientsChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
         {
+
+            
+            var bar = (Bar)o;
+
+            var t = bar.ReadLocalValue(IngridientsProperty) as BindingExpression;
+            var t1 = bar.GetValue(IngridientsProperty);
+            var t3 = t.ParentBinding.Source as DataSourceProvider;
+            if (t3 != null)
+                DataChangedEventManager.AddListener(t3, bar);
+           
+            var provider = bar.Ingridients as DataSourceProvider;
+            if (provider != null)
+                DataChangedEventManager.AddListener(provider, bar);
+
         }
+
+        
 
         private static object OnIngredientsValueChanged(DependencyObject d, object baseValue)
         {
@@ -28,6 +44,10 @@ namespace WpfApplication1
 
         protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
         {
+            var provider = e.NewValue as DataSourceProvider;
+            if (provider != null)
+                DataChangedEventManager.AddListener(provider, this);
+
             base.OnPropertyChanged(e);
             var t2 = e.NewValue as IEnumerable<XmlNode>;
             if (t2 != null)
@@ -54,6 +74,8 @@ namespace WpfApplication1
                 PropertyChanged(this, new PropertyChangedEventArgs(BarIngridientsProperty.Name));
         }
 
+        
+
         public object Ingridients
         {
             get { return (object)GetValue(IngridientsProperty); }
@@ -66,7 +88,7 @@ namespace WpfApplication1
                                     "Ingridients",
                                     typeof(object),
                                     typeof(Bar),
-                                    new UIPropertyMetadata(
+                                    new FrameworkPropertyMetadata(
                                         null,
                                         new PropertyChangedCallback(OnIngredientsChanged)));
 
