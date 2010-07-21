@@ -7,6 +7,8 @@ using System.ComponentModel;
 using System.Windows;
 using System.Runtime.CompilerServices;
 using System.Xml;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 
 namespace WpfApplication1
 {
@@ -14,46 +16,43 @@ namespace WpfApplication1
     {
         public Bar()
         {
-            //CollectionViewSource
         }
 
         private static void OnIngredientsChanged(DependencyObject o, DependencyPropertyChangedEventArgs args)
         {
-
-            
             var bar = (Bar)o;
+            var oldCollection = args.NewValue as INotifyCollectionChanged;
+            if (oldCollection != null)
+                CollectionChangedEventManager.RemoveListener(oldCollection, bar);
 
-            var t = bar.ReadLocalValue(IngridientsProperty) as BindingExpression;
-            var t1 = bar.GetValue(IngridientsProperty);
-            var t3 = t.ParentBinding.Source as DataSourceProvider;
-            if (t3 != null)
-                DataChangedEventManager.AddListener(t3, bar);
-           
-            var provider = bar.Ingridients as DataSourceProvider;
-            if (provider != null)
-                DataChangedEventManager.AddListener(provider, bar);
+            var newCollection = args.NewValue as INotifyCollectionChanged;
+            if (newCollection != null)
+                CollectionChangedEventManager.AddListener(newCollection, bar);
 
+            bar.ProcessIntridientsChange();
         }
 
-        
-
-        private static object OnIngredientsValueChanged(DependencyObject d, object baseValue)
+        /// <summary>
+        /// IWeakEventListener handler
+        /// </summary>
+        /// <param name="managerType"></param>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <returns></returns>
+        public bool ReceiveWeakEvent(Type managerType, object sender, EventArgs e)
         {
-            return null;
+            var args = e as CollectionChangeEventArgs;
+            ProcessIntridientsChange();
+            return true;
         }
 
-        protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
+        private void ProcessIntridientsChange()
         {
-            var provider = e.NewValue as DataSourceProvider;
-            if (provider != null)
-                DataChangedEventManager.AddListener(provider, this);
-
-            base.OnPropertyChanged(e);
-            var t2 = e.NewValue as IEnumerable<XmlNode>;
-            if (t2 != null)
+            var ingredients = this.Ingridients as IEnumerable<XmlNode>;
+            if (ingredients != null)
             {
                 List<BarIngridient> result = new List<BarIngridient>();
-                foreach (XmlNode ingridient in t2)
+                foreach (XmlNode ingridient in ingredients)
                 {
                     string IdString = ingridient.Attributes["ID"].Value;
                     int Id;
@@ -73,8 +72,6 @@ namespace WpfApplication1
             if (handler != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(BarIngridientsProperty.Name));
         }
-
-        
 
         public object Ingridients
         {
@@ -103,11 +100,6 @@ namespace WpfApplication1
             DependencyProperty.Register("BarIngridients", typeof(BarIngridient[]), typeof(Bar), new UIPropertyMetadata(null));
 
         public event PropertyChangedEventHandler PropertyChanged;
-
-        public bool ReceiveWeakEvent(Type managerType, object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
-        }
     }
 
     public class BarIngridient
