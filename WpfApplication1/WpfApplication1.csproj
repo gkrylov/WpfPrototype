@@ -56,6 +56,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="CollectionViewProxy.cs" />
+    <Compile Include="IngredientsConverter.cs" />
+    <Compile Include="Model.cs" />
     <Compile Include="UncommonField.cs" />
     <Compile Include="ViewRecord.cs" />
     <Page Include="MainWindow.xaml">

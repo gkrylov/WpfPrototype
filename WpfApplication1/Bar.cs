@@ -48,11 +48,11 @@ namespace WpfApplication1
 
         private void ProcessIntridientsChange()
         {
-            var ingredients = this.Ingridients as IEnumerable<XmlNode>;
-            if (ingredients != null)
+            List<BarIngridient> result = new List<BarIngridient>();
+            var ingredientNodes = this.Ingridients as IEnumerable<XmlNode>;
+            if (ingredientNodes != null)
             {
-                List<BarIngridient> result = new List<BarIngridient>();
-                foreach (XmlNode ingridient in ingredients)
+                foreach (XmlNode ingridient in ingredientNodes)
                 {
                     string IdString = ingridient.Attributes["ID"].Value;
                     int Id;
@@ -65,8 +65,14 @@ namespace WpfApplication1
                     }
                 }
 
-                BarIngridients = result.ToArray();
             }
+
+            var ingredients = this.Ingridients as ObservableCollection<Ingredient>;
+            if (ingredients != null)
+                foreach (Ingredient ingredient in ingredients)
+                    result.Add(new BarIngridient() { Id = ingredient.Id, IsInBar = true });
+
+            BarIngridients = result.ToArray();
 
             var handler = PropertyChanged;
             if (handler != null)
@@ -78,7 +84,7 @@ namespace WpfApplication1
             get { return (object)GetValue(IngridientsProperty); }
             set { SetValue(IngridientsProperty, value); }
         }
- 
+
         // Using a DependencyProperty as the backing store for Intridients.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty IngridientsProperty =
             DependencyProperty.Register(

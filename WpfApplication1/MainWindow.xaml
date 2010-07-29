@@ -4,21 +4,23 @@
         xmlns:app="clr-namespace:WpfApplication1"
         Title="Петушиные Хвосты (Коктейли)" Height="350" Width="525">
     <Window.Resources>
-        <XmlDataProvider Source="C:\Users\user\Documents\Ingridient.xml"
-                         XPath="/Ingridients/Ingridient"
-                         x:Key="ingridientsSource" />
         <XmlDataProvider Source="C:\Users\user\Documents\MyBar.xml"
                          XPath="/Ingridients/Ingridient"
                          x:Key="barIngridientsSource" />
-        <app:Bar Ingridients="{Binding Source={StaticResource ingridientsSource}}" 
-                 x:Key="barSource"/>
         <CollectionViewSource Source="{Binding Source={StaticResource ingridientsSource}}"
                               x:Key="ingridientsSource2"/>
+        <XmlDataProvider Source="C:\Users\user\Documents\Ingridient.xml"
+                         XPath="/Ingridients/Ingridient"
+                         x:Key="ingridientsSource" />
+        <app:Model x:Key="model" />
+        <app:IngredientsConverter x:Key="ingredientsConverter" Model="{Binding Source={StaticResource model}}" />
+        <app:Bar Ingridients="{Binding Source={StaticResource model}, Path=Ingredients}" 
+                 x:Key="barSource"/>
     </Window.Resources>
     <TabControl>
         <TabItem Header="Ингридиенты" x:Name="ingridientsTabItem">
             <TabItem.DataContext>
-                <Binding Source="{StaticResource ingridientsSource}" />
+                <Binding Source="{StaticResource model}" Path="Ingredients" />
             </TabItem.DataContext>
             <DockPanel LastChildFill="True">
                 <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Height="Auto" HorizontalAlignment="Right">
@@ -29,13 +31,15 @@
                           AutoGenerateColumns="False"
                           IsTextSearchEnabled="True"
                           IsReadOnly="False"
+                          CanUserSortColumns="True"
                           CanUserAddRows="True"
-                          CanUserDeleteRows="True"
-                          CanUserSortColumns="True" 
                           ItemsSource="{Binding}">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Название" Width="*" Binding="{Binding XPath=@Name, Mode=TwoWay}" />
-                        <DataGridTextColumn Header="Градус" Width="SizeToHeader" Binding="{Binding XPath=@Percent, Mode=TwoWay}" />
+                        <DataGridTextColumn Header="Название" 
+                                            Width="*" 
+                                            Binding="{Binding Path=Name, Mode=TwoWay}" />
+                        <DataGridTextColumn Header="Градус" Width="SizeToHeader"
+                                            Binding="{Binding Path=Percent, Mode=TwoWay}" />
                     </DataGrid.Columns>
                 </DataGrid>
             </DockPanel>
@@ -47,7 +51,9 @@
             <ListView ItemsSource="{Binding Path=BarIngridients, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  Loaded="ListView_Loaded">
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Header="Ingridient" DisplayMemberBinding="{Binding Path=Id}" />
+                        <GridViewColumn
+                            Header="Ingridient"
+                            DisplayMemberBinding="{Binding Path=Id, Converter={StaticResource ingredientsConverter}}" />
                         <GridViewColumn Header="Есть в Баре">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
@@ -73,12 +79,12 @@
         </TabItem>
         <TabItem Header="Мой бар 3">
             <TabItem.DataContext>
-                <Binding Source="{StaticResource ingridientsSource2}" />
+                <Binding Source="{StaticResource model}" />
             </TabItem.DataContext>
-            <ListView ItemsSource="{Binding}">
+            <ListView ItemsSource="{Binding Path=Ingredients}">
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Header="Ingridient" DisplayMemberBinding="{Binding XPath=@Name}" />
+                        <GridViewColumn Header="Ingridient" DisplayMemberBinding="{Binding Path=Name}" />
                     </GridView>
                 </ListView.View>
             </ListView>

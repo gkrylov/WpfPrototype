@@ -21,9 +21,9 @@ namespace WpfApplication1
     /// </summary>
     public partial class MainWindow : Window
     {
-        private int maximumIngridientId = 0;
-        private XmlDataProvider ingridients;
-        private XmlDataProvider barIngridients;
+        //private int maximumIngridientId = 0;
+        //private XmlDataProvider ingridients;
+        //private XmlDataProvider barIngridients;
         public MainWindow()
         {
                 InitializeComponent();
@@ -31,20 +31,20 @@ namespace WpfApplication1
 
         protected override void OnSourceInitialized(EventArgs e)
         {
-            base.OnSourceInitialized(e);
-            ingridients = (XmlDataProvider)this.Resources["ingridientsSource"];
-            ingridients.Document.NodeChanged += new XmlNodeChangedEventHandler(Document_NodeChanged);
-            ingridients.Document.NodeRemoved += new XmlNodeChangedEventHandler(Document_NodeChanged);
-            this.Closing += new System.ComponentModel.CancelEventHandler(MainWindow_Closing);
+            //base.OnSourceInitialized(e);
+            //ingridients = (XmlDataProvider)this.Resources["ingridientsSource"];
+            //ingridients.Document.NodeChanged += new XmlNodeChangedEventHandler(Document_NodeChanged);
+            //ingridients.Document.NodeRemoved += new XmlNodeChangedEventHandler(Document_NodeChanged);
+            //this.Closing += new System.ComponentModel.CancelEventHandler(MainWindow_Closing);
 
-            foreach (XmlNode ingridientNode in ingridients.Document.LastChild)
-            {
-                int id = int.Parse(ingridientNode.Attributes["ID"].Value);
-                if (id > maximumIngridientId)
-                    maximumIngridientId = id;
-            }
+            //foreach (XmlNode ingridientNode in ingridients.Document.LastChild)
+            //{
+            //    int id = int.Parse(ingridientNode.Attributes["ID"].Value);
+            //    if (id > maximumIngridientId)
+            //        maximumIngridientId = id;
+            //}
 
-            barIngridients = (XmlDataProvider)this.Resources["barIngridientsSource"];
+            //barIngridients = (XmlDataProvider)this.Resources["barIngridientsSource"];
             //if (barIngridients.Document == null)
             //{
             //    var document = new XmlDocument();
@@ -63,32 +63,32 @@ namespace WpfApplication1
 
         void Document_NodeChanged(object sender, XmlNodeChangedEventArgs e)
         {
-            string path = System.IO.Path.GetFullPath(ingridients.Source.OriginalString);
-            ingridients.Document.Save(path);
+            //string path = System.IO.Path.GetFullPath(ingridients.Source.OriginalString);
+            //ingridients.Document.Save(path);
         }
 
         private void Delete_Click(object sender, RoutedEventArgs e)
         {
-            XmlNode selected = ingridientsGrid.SelectedItem as XmlNode;
-            if (selected != null && ingridients.Document.LastChild.ChildNodes.Count > 1)
-                ingridients.Document.LastChild.RemoveChild(selected);
+            //XmlNode selected = ingridientsGrid.SelectedItem as XmlNode;
+            //if (selected != null && ingridients.Document.LastChild.ChildNodes.Count > 1)
+            //    ingridients.Document.LastChild.RemoveChild(selected);
         }
 
         private void Add_Click(object sender, RoutedEventArgs e)
         {
-            XmlNode node = ingridients.Document.LastChild.LastChild.CloneNode(false);
-            foreach (XmlAttribute attribute in node.Attributes)
-                if (attribute.Name == "ID")
-                    attribute.Value = GetNextIngridientId().ToString();
-                else
-                    attribute.Value = null;
-            ingridients.Document.LastChild.AppendChild(node);
+            //XmlNode node = ingridients.Document.LastChild.LastChild.CloneNode(false);
+            //foreach (XmlAttribute attribute in node.Attributes)
+            //    if (attribute.Name == "ID")
+            //        attribute.Value = GetNextIngridientId().ToString();
+            //    else
+            //        attribute.Value = null;
+            //ingridients.Document.LastChild.AppendChild(node);
         }
 
-        private int GetNextIngridientId()
-        {
-            return ++maximumIngridientId;
-        }
+        //private int GetNextIngridientId()
+        //{
+        //    //return ++maximumIngridientId;
+        //}
 
         private void ingridients_DataChanged(object sender, EventArgs e)
         {
@@ -107,8 +107,8 @@ namespace WpfApplication1
 
         private void SaveBar()
         {
-            string path = System.IO.Path.GetFullPath(barIngridients.Source.OriginalString);
-            barIngridients.Document.Save(path);
+        //    string path = System.IO.Path.GetFullPath(barIngridients.Source.OriginalString);
+        //    barIngridients.Document.Save(path);
         }
 
         private void CheckBox_Unchecked(object sender, RoutedEventArgs e)
